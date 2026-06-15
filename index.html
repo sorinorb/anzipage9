@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mau Nggak Jalan Bareng? 🥰</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind Config Custom Animations -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #fdf2f8;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #fbcfe8;
+      border-radius: 10px;
+    }
+    
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+    
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 0.4s ease-out forwards;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+    .animate-shake {
+      animation: shake 0.4s ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-pink-100 flex items-center justify-center p-4 relative overflow-hidden font-sans select-none">
+
+  <!-- Main Container (Bingkai Handphone) -->
+  <div class="w-full max-w-sm h-[700px] flex flex-col bg-pink-50 rounded-[40px] shadow-2xl relative overflow-hidden border-8 border-white p-6 z-10">
+    
+    <!-- === TOMBOL RAHASIA ADMIN === -->
+    <button id="admin-trigger" class="absolute bottom-0 left-0 w-16 h-16 bg-black opacity-0 z-50 cursor-default"></button>
+
+    <!-- ==================== SCREEN: STEP -1 (SINKRONISASI SERIAL) ==================== -->
+    <div id="step-connection" class="step-container hidden flex flex-col items-center justify-center h-full animate-fade-in-up">
+      <div class="text-6xl mb-6 animate-bounce">📡</div>
+      <h2 class="text-2xl font-bold text-pink-600 mb-2 text-center">Menghubungkan Sesi</h2>
+      <p class="text-gray-500 text-xs text-center mb-6 px-4">Masukkan Kode Serial yang diberikan oleh pengirim untuk memulai ajakan.</p>
+      
+      <input type="text" id="input-serial-code" placeholder="Ketik Kode Serial (misal: DATE-1234)" class="w-full px-4 py-3 rounded-2xl border-2 border-pink-300 focus:border-pink-500 outline-none text-center font-bold tracking-widest text-lg uppercase bg-white mb-4 shadow-sm" />
+      
+      <button onclick="submitManualSerial()" class="w-full bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-full font-bold text-lg transition-all shadow-lg">
+        Hubungkan Sekarang 💖
+      </button>
+    </div>
+
+    <!-- ==================== SCREEN: STEP 0 (AJAKAN UTAMA) ==================== -->
+    <div id="step-0" class="step-container hidden flex flex-col items-center justify-center h-full animate-fade-in-up">
+      <div class="relative w-40 h-40 mb-6 flex items-center justify-center">
+        <div class="absolute inset-0 border-4 border-pink-300 rounded-full animate-ping-slow opacity-20"></div>
+        <div class="absolute inset-4 border-4 border-pink-400 rounded-full animate-ping-slow opacity-40" style="animation-delay: 0.5s"></div>
+        <div class="text-7xl relative z-10 animate-bounce">🥺</div>
+        <div class="absolute -top-2 -left-2 text-2xl animate-float">❓</div>
+        <div class="absolute top-2 -right-2 text-2xl animate-float" style="animation-delay: 1s">💖</div>
+        <div class="absolute bottom-2 -left-0 text-2xl animate-float" style="animation-delay: 2s">✨</div>
+      </div>
+      
+      <h2 class="text-3xl font-bold text-pink-600 mb-8 text-center px-2">Mau nggak jalan bareng aku?</h2>
+      
+      <div class="relative w-full h-32 mt-4">
+        <button id="btn-mau" class="bg-pink-500 text-white px-8 py-3 rounded-full font-bold text-xl hover:bg-pink-600 shadow-lg absolute z-20 h-14" style="left: 15%">
+          Mau
+        </button>
+        <button id="btn-nggak" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-full font-bold text-xl absolute transition-all duration-200 z-10 h-14" style="right: 15%">
+          Nggak
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: STEP 1 (REAKSI MAU) ==================== -->
+    <div id="step-1" class="step-container hidden flex flex-col items-center justify-center h-full animate-fade-in-up">
+      <div class="relative w-40 h-40 mb-6 flex items-center justify-center">
+        <div class="absolute inset-0 border-4 border-pink-300 rounded-full animate-ping-slow opacity-20"></div>
+        <div class="text-7xl relative z-10 animate-bounce">🥳</div>
+        <div class="absolute -top-2 -left-2 text-2xl animate-float">🎉</div>
+        <div class="absolute top-2 -right-2 text-2xl animate-float" style="animation-delay: 1s">✨</div>
+        <div class="absolute bottom-2 -left-0 text-2xl animate-float" style="animation-delay: 2s">🎈</div>
+      </div>
+      <h2 class="text-3xl font-bold text-pink-600 mb-2 text-center">Wah, kamu beneran bilang iya!</h2>
+      <p class="text-gray-500 mb-8 text-center px-4">Padahal aku udah deg-degan takut ditolak 😅</p>
+      <button onclick="goToStep(2)" class="w-full bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-full font-bold text-xl transition-all shadow-lg">
+        Lanjut 💖
+      </button>
+    </div>
+
+    <!-- ==================== SCREEN: STEP 2 (PILIH JADWAL) ==================== -->
+    <div id="step-2" class="step-container hidden flex flex-col h-full animate-fade-in-up">
+      <div class="relative w-36 h-36 mb-4 flex items-center justify-center mx-auto">
+        <div class="text-6xl relative z-10 animate-bounce">📅</div>
+        <div class="absolute -top-1 -left-1 text-xl animate-float">⏰</div>
+        <div class="absolute top-1 -right-1 text-xl animate-float" style="animation-delay: 1s">⏳</div>
+        <div class="absolute bottom-1 -left-1 text-xl animate-float" style="animation-delay: 2s">✨</div>
+      </div>
+      <h2 class="text-2xl font-bold text-pink-600 mb-4 text-center w-full">Kapan kamu ada waktu luang?</h2>
+      <div class="space-y-4 flex-1 w-full">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
+          <label class="block text-gray-400 text-xs font-bold mb-1 uppercase tracking-wider">Pilih tanggal</label>
+          <input type="date" id="input-date" class="w-full text-lg text-gray-700 outline-none bg-transparent font-medium" />
+        </div>
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-pink-100">
+          <label class="block text-gray-400 text-xs font-bold mb-1 uppercase tracking-wider">Pilih jam</label>
+          <input type="time" id="input-time" class="w-full text-lg text-gray-700 outline-none bg-transparent font-medium" />
+        </div>
+      </div>
+      <button id="btn-step2-next" onclick="goToStep(3)" disabled class="w-full py-4 rounded-full font-bold text-lg transition-all mt-4 bg-gray-200 text-gray-400 cursor-not-allowed">
+        Simpan Waktu
+      </button>
+    </div>
+
+    <!-- ==================== SCREEN: STEP 3 (PILIH MAKANAN) ==================== -->
+    <div id="step-3" class="step-container hidden flex flex-col h-full animate-fade-in-up">
+      <div class="relative w-28 h-28 mb-3 flex items-center justify-center mx-auto">
+        <div class="text-5xl relative z-10 animate-bounce">🤤</div>
+        <div class="absolute -top-1 -left-1 text-lg animate-float">🍽️</div>
+        <div class="absolute top-1 -right-1 text-lg animate-float" style="animation-delay: 1s">😋</div>
+      </div>
+      <h2 class="text-2xl font-bold text-pink-600 mb-2 text-center w-full">Lagi pengen makan apa nih?</h2>
+      
+      <!-- Grid Makanan -->
+      <div id="food-grid" class="grid grid-cols-3 gap-2.5 mb-2 overflow-y-auto pb-4 custom-scrollbar flex-1 w-full"></div>
+      
+      <!-- Input Kustom Makanan -->
+      <div id="custom-food-container" class="hidden w-full mb-3">
+        <input type="text" id="input-custom-food" placeholder="Ketik makan apa..." class="w-full px-4 py-3 rounded-2xl border-2 border-pink-300 outline-none focus:border-pink-500 bg-white text-gray-700 shadow-inner" />
+      </div>
+
+      <button id="btn-step3-next" onclick="goToStep(4)" disabled class="w-full py-4 rounded-full font-bold text-lg transition-all mt-auto bg-gray-200 text-gray-400 cursor-not-allowed">
+        Lanjut
+      </button>
+    </div>
+
+    <!-- ==================== SCREEN: STEP 4 (PILIH AKTIVITAS) ==================== -->
+    <div id="step-4" class="step-container hidden flex flex-col h-full animate-fade-in-up">
+      <div class="relative w-28 h-28 mb-3 flex items-center justify-center mx-auto">
+        <div class="text-5xl relative z-10 animate-bounce">💭</div>
+        <div class="absolute -top-1 -left-1 text-lg animate-float">🎟️</div>
+        <div class="absolute top-1 -right-1 text-lg animate-float" style="animation-delay: 1s">🎡</div>
+      </div>
+      <h2 class="text-2xl font-bold text-pink-600 mb-2 text-center w-full">Lagi pengen ngapain kita?</h2>
+      
+      <!-- Grid Aktivitas -->
+      <div id="activity-grid" class="grid grid-cols-4 gap-2.5 mb-2 overflow-y-auto pb-4 custom-scrollbar flex-1 w-full"></div>
+      
+      <!-- Input Kustom Aktivitas -->
+      <div id="custom-activity-container" class="hidden w-full mb-3">
+        <input type="text" id="input-custom-activity" placeholder="Ketik rencana aktivitas..." class="w-full px-4 py-3 rounded-2xl border-2 border-pink-300 outline-none focus:border-pink-500 bg-white text-gray-700 shadow-inner" />
+      </div>
+
+      <button id="btn-step4-next" onclick="goToStep(5)" disabled class="w-full py-4 rounded-full font-bold text-lg transition-all mt-auto bg-gray-200 text-gray-400 cursor-not-allowed">
+        Lanjut
+      </button>
+    </div>
+
+    <!-- ==================== SCREEN: STEP 5 (INPUT NAMA NYATA) ==================== -->
+    <div id="step-5" class="step-container hidden flex flex-col h-full animate-fade-in-up">
+      <div class="relative w-36 h-36 mb-3 flex items-center justify-center mx-auto">
+        <div class="text-6xl relative z-10 animate-bounce">🕵️‍♀️</div>
+        <div class="absolute -top-1 -left-1 text-xl animate-float">🤫</div>
+        <div class="absolute top-1 -right-1 text-xl animate-float" style="animation-delay: 1.2s">🔒</div>
+      </div>
+      <h2 class="text-2xl font-bold text-pink-600 mb-1 text-center w-full">Tunggu, siapa nama kamu?</h2>
+      <p class="text-gray-500 mb-5 text-center text-xs px-2 w-full">Nama asli kamu terekam secara rahasia di log admin! 🤫</p>
+      
+      <input type="text" id="input-real-name" placeholder="Ketik nama asli kamu..." class="w-full px-4 py-3 rounded-2xl border-2 border-pink-300 focus:border-pink-500 outline-none text-gray-700 shadow-sm bg-white text-center text-lg font-bold" />
+      
+      <!-- Box Sandi Rahasia -->
+      <div id="secret-name-box" class="hidden w-full bg-pink-100 p-4 rounded-2xl border border-pink-300 text-center mt-4 shadow-inner">
+        <span class="text-xs text-pink-500 font-semibold uppercase tracking-wider">Nama Samaran Kamu:</span>
+        <p id="secret-name-display" class="text-2xl font-mono font-bold text-pink-600 mt-1 tracking-[0.2em]"></p>
+      </div>
+
+      <button id="btn-step5-next" onclick="handleFinishStep5()" disabled class="w-full py-4 rounded-full font-bold text-lg transition-all mt-auto bg-gray-200 text-gray-400 cursor-not-allowed">
+        Lanjut!
+      </button>
+    </div>
+
+    <!-- ==================== SCREEN: STEP 6 (FINAL WAITING / SEND) ==================== -->
+    <div id="step-6" class="step-container hidden flex flex-col items-center justify-center h-full animate-fade-in-up">
+      <div class="relative w-32 h-32 mb-4 flex items-center justify-center">
+        <div class="text-6xl relative z-10 animate-bounce">💌</div>
+        <div class="absolute -top-1 -left-1 text-xl animate-float">💖</div>
+        <div class="absolute top-1 -right-1 text-xl animate-float" style="animation-delay: 1.5s">✨</div>
+      </div>
+      
+      <h2 class="text-2xl font-bold text-pink-600 mb-1 text-center">Siapp, serahkan padaku! 💕</h2>
+      <p id="send-status-text" class="text-amber-600 mb-4 text-center animate-pulse text-sm font-medium">Menunggu konfirmasi admin... ⏳</p>
+      
+      <!-- Resume Ajakan -->
+      <div class="bg-white/60 p-4 rounded-2xl w-full text-center space-y-3 backdrop-blur-sm border border-pink-100 shadow-sm mb-4 text-xs">
+        <div class="flex flex-col items-center justify-center gap-1">
+          <span class="text-[10px] font-semibold text-pink-400 uppercase tracking-wide">Pengirim Rahasia:</span>
+          <span id="summary-secret-name" class="font-bold font-mono tracking-wider text-pink-600 bg-pink-100 px-3 py-0.5 rounded-lg text-sm"></span>
+        </div>
+        <div class="flex flex-col items-center justify-center mt-1">
+          <span class="text-gray-400">Jadwal:</span>
+          <span id="summary-datetime" class="font-bold text-gray-700"></span>
+        </div>
+        <div class="flex flex-col gap-1.5 mt-2 border-t border-pink-100 pt-3">
+          <div class="flex items-center justify-between px-2">
+            <span class="text-gray-400">Makan:</span>
+            <span id="summary-food" class="font-semibold text-gray-700"></span>
+          </div>
+          <div class="flex items-center justify-between px-2">
+            <span class="text-gray-400">Aktivitas:</span>
+            <span id="summary-activity" class="font-semibold text-gray-700"></span>
+          </div>
+        </div>
+      </div>
+      
+      <button id="btn-whatsapp" onclick="sendWhatsApp()" disabled class="w-full py-4 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2 bg-gray-200 text-gray-400 cursor-not-allowed">
+        <span>Konfirmasi dulu di Admin</span>
+      </button>
+    </div>
+
+    <!-- ==================== SCREEN: ADMIN LOGIN (DIAL PAD) ==================== -->
+    <div id="admin-login-screen" class="hidden absolute inset-0 z-50 bg-black/90 backdrop-blur-xl flex flex-col items-center justify-start text-white w-full h-full pb-8">
+      <div class="w-full flex justify-end p-6">
+        <button onclick="closeAdmin()" class="text-white/80 font-medium text-sm">Batal</button>
+      </div>
+      <div class="flex flex-col items-center mt-4 mb-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        <h2 class="text-lg font-medium tracking-wide">Masukkan PIN Admin</h2>
+      </div>
+      
+      <!-- Indikator Pin -->
+      <div id="pin-dots" class="flex gap-4 mb-10">
+        <div class="w-[12px] h-[12px] rounded-full border border-white bg-transparent"></div>
+        <div class="w-[12px] h-[12px] rounded-full border border-white bg-transparent"></div>
+        <div class="w-[12px] h-[12px] rounded-full border border-white bg-transparent"></div>
+        <div class="w-[12px] h-[12px] rounded-full border border-white bg-transparent"></div>
+        <div class="w-[12px] h-[12px] rounded-full border border-white bg-transparent"></div>
+        <div class="w-[12px] h-[12px] rounded-full border border-white bg-transparent"></div>
+      </div>
+      
+      <!-- Keypad Dial -->
+      <div class="grid grid-cols-3 gap-x-6 gap-y-3">
+        <button onclick="pressPin('1')" class="w-[68px] h-[68px] rounded-full bg-white/10 flex flex-col items-center justify-center active:bg-white/30 transition-colors"><span class="text-2xl font-light">1</span></button>
+        <button onclick="pressPin('2')" class="w-[68px] h-[68px] rounded-full bg-white/10 flex flex-col items-center justify-center active:bg-white/30 transition-colors"><span class="text-2xl font-light">2</span><span class="text-[8px] font-bold tracking-wider text-white/60">A B C</span></button>
+        <button onclick="pressPin('3')" class="w-[68px] h-[68px] rounded-full bg-white/10 flex flex-col items-center justify-center active:bg-white/30 transition-colors"><span class="text-2xl font-light">3</span><span class="text-[8px] font-bold tracking-wider text-white/60">D E F</span></button>
+        <button onclick="pressPin('4')" class="w-[68px] h-[68px] rounded-full bg-white/10 flex flex-col items-center justify-center active:bg-white/30 transition-colors"><span class="text-2xl font-light">4</span><span class="text-[8px] font-bold tracking-wider text-white/60">G H I</span></button>
+        <button onclick="pressPin('5')" class="w-[68px] h-[68px] rounded-full bg-white/10 flex flex-col items-center justify-center active:bg-white/30 transition-colors"><span class="text-2xl font-light">5</span><span class="text-[8px] font-bold tracking-wider text-white/60">J K L</span></button>
+        <button onclick="pressPin('6')" class="w-[68px] h-[68px] rounded-full bg-white/10 flex flex-col items-center justify-center active:bg-white/30 transition-colors"><span class="text-2xl font-light">6</span><span class="text-[8px] font-bold tracking-wider text-white/60">M N O</span></button>
+        <button onclick="pressPin('7')" class="w-[68px] h-[68px] rounded-full bg-white/10 flex flex-col items-center justify-center active:bg-white/30 transition-colors"><span class="text-2xl font-light">7</span><span class="text-[8px] font-bold tracking-wider text-white/60">P Q R S</span></button>
+        <button onclick="pressPin('8')" class="w-[68px] h-[68px] rounded-full bg-white/10 flex flex-col items-center justify-center active:bg-white/30 transition-colors"><span class="text-2xl font-light">8</span><span class="text-[8px] font-bold tracking-wider text-white/60">T U V</span></button>
+        <button onclick="pressPin('9')" class="w-[68px] h-[68px] rounded-full bg-white/10 flex flex-col items-center justify-center active:bg-white/30 transition-colors"><span class="text-2xl font-light">9</span><span class="text-[8px] font-bold tracking-wider text-white/60">W X Y Z</span></button>
+        <div class="w-[68px] h-[68px]"></div>
+        <button onclick="pressPin('0')" class="w-[68px] h-[68px] rounded-full bg-white/10 flex items-center justify-center active:bg-white/30 transition-colors"><span class="text-2xl font-light">0</span></button>
+        <button onclick="deletePin()" class="w-[68px] h-[68px] rounded-full flex items-center justify-center active:bg-white/10 transition-colors text-xs text-white/80">Hapus</button>
+      </div>
+    </div>
+
+    <!-- ==================== SCREEN: ADMIN DASHBOARD ==================== -->
+    <div id="admin-dashboard-screen" class="hidden absolute inset-0 z-50 bg-pink-50 flex flex-col w-full h-full animate-fade-in-up">
+      <div class="sticky top-0 z-10 bg-white text-gray-800 px-6 py-4 flex justify-between items-center rounded-b-[30px] shadow-sm border-b border-pink-100">
+        <h2 class="text-lg font-bold text-pink-600">Admin Panel</h2>
+        <button onclick="closeAdmin()" class="bg-pink-100 hover:bg-pink-200 text-pink-600 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all">
+          Tutup
+        </button>
+      </div>
+      
+      <div class="p-5 flex flex-col gap-4 overflow-y-auto custom-scrollbar flex-1">
+        <!-- Room Info -->
+        <div class="bg-white p-4 rounded-2xl border border-pink-100 shadow-sm text-sm">
+          <h3 class="text-[10px] font-bold text-pink-400 uppercase tracking-widest mb-1">Kode Serial Sesi Ini</h3>
+          <p id="admin-serial-display" class="text-xl font-mono font-bold text-gray-800 tracking-wider">DATE-XXXX</p>
+          <button onclick="copyInviteLink()" class="mt-2 text-xs bg-pink-500 hover:bg-pink-600 text-white font-bold py-1.5 px-3 rounded-lg transition-colors w-full">
+            Salin Link Ajakan 🔗
+          </button>
+          <p id="copy-status" class="text-[10px] text-green-500 text-center mt-1 hidden font-semibold">Tautan berhasil disalin!</p>
+        </div>
+
+        <!-- Log Data User -->
+        <div class="bg-white p-4 rounded-2xl border border-pink-100 shadow-sm text-sm">
+          <h3 class="text-[10px] font-bold text-pink-400 uppercase tracking-widest mb-3">Live Monitor Target</h3>
+          <div id="admin-log-container" class="space-y-2">
+            <p class="text-gray-400 text-xs italic">Belum ada aktivitas terdeteksi...</p>
+          </div>
+        </div>
+
+        <!-- Kontrol Izin WhatsApp -->
+        <div class="bg-white p-5 rounded-2xl border border-pink-100 shadow-sm flex flex-col items-center gap-2 text-center">
+          <div id="admin-status-icon" class="text-3xl">🔒</div>
+          <div>
+            <h3 class="font-bold text-gray-800 text-xs">Izin Kirim WhatsApp</h3>
+            <p class="text-gray-400 text-[10px] mt-0.5">Buka akses pengiriman WhatsApp di layar si dia?</p>
+          </div>
+          <!-- Toggle Button -->
+          <button id="toggle-permission" onclick="togglePermission()" class="w-16 h-8 rounded-full p-1 transition-all flex items-center shadow-inner bg-gray-300 justify-start">
+            <div class="w-6 h-6 rounded-full bg-white shadow-md"></div>
+          </button>
+        </div>
+
+        <!-- Reset Aplikasi -->
+        <div class="bg-white p-4 rounded-2xl border border-red-100 shadow-sm text-center">
+          <button onclick="resetApplicationData()" class="w-full py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl text-xs transition-colors shadow">
+            Reset Ulang Sesi Baru
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // === DATA CONFIG ===
+    const foods = [
+      { id: 'burger', icon: '🍔', name: 'Burger' },
+      { id: 'hotdog', icon: '🌭', name: 'Hotdog' },
+      { id: 'pasta', icon: '🍝', name: 'Pasta' },
+      { id: 'taco', icon: '🌮', name: 'Taco' },
+      { id: 'pizza', icon: '🍕', name: 'Pizza' },
+      { id: 'sushi', icon: '🍣', name: 'Sushi' },
+      { id: 'ramen', icon: '🍜', name: 'Ramen' },
+      { id: 'fried-chicken', icon: '🍗', name: 'Ayam Goreng' },
+      { id: 'steak', icon: '🥩', name: 'Steak' },
+      { id: 'salad', icon: '🥗', name: 'Salad' },
+      { id: 'ice-cream', icon: '🍦', name: 'Es Krim' },
+      { id: 'donut', icon: '🍩', name: 'Donat' },
+      { id: 'custom', icon: '✍️', name: 'Lainnya (Ketik sendiri)' },
+    ];
+
+    const activities = [
+      { id: 'golf', icon: '⛳️', name: 'Main Golf' },
+      { id: 'walk', icon: '🚶‍♂️', name: 'Jalan Santai' },
+      { id: 'movie', icon: '📽️', name: 'Nonton Bioskop' },
+      { id: 'dinner', icon: '🍽️', name: 'Makan Malam' },
+      { id: 'rollercoaster', icon: '🎢', name: 'Taman Hiburan' },
+      { id: 'beach', icon: '🏝️', name: 'Main ke Pantai' },
+      { id: 'picnic', icon: '🧺', name: 'Piknik' },
+      { id: 'coffee', icon: '☕️', name: 'Ngopi Cantik' },
+      { id: 'art', icon: '🎨', name: 'Galeri Seni' },
+      { id: 'skating', icon: '⛸️', name: 'Ice Skating' },
+      { id: 'arcade', icon: '🕹️', name: 'Timezone' },
+      { id: 'bowling', icon: '🎳', name: 'Bowling' },
+      { id: 'zoo', icon: '🐧', name: 'Kebun Binatang' },
+      { id: 'baking', icon: '🧁', name: 'Bikin Kue' },
+      { id: 'music', icon: '🎵', name: 'Konser/Live Music' },
+      { id: 'stargazing', icon: '🔭', name: 'Lihat Bintang' },
+      { id: 'games', icon: '🎲', name: 'Board Games' },
+      { id: 'shopping', icon: '🛍️', name: 'Jalan ke Mall' },
+      { id: 'bike', icon: '🚲', name: 'Sepedaan' },
+      { id: 'karaoke', icon: '🎤', name: 'Karaoke' },
+      { id: 'custom', icon: '✍️', name: 'Lainnya (Ketik sendiri)' },
+    ];
+
+    // === STATE ===
+    let state = {
+      serialCode: '',
+      currentStep: -1, // Mulai dari step koneksi dulu jika tidak ada serial
+      date: '',
+      time: '',
+      selectedFood: null,
+      selectedActivity: null,
+      customFood: '',
+      customActivity: '',
+      realName: '',
+      secretName: '',
+      isSendAllowed: false,
+      adminAuthenticated: false,
+      enteredPin: '',
+      targetAktivitas: []
+    };
+
+    // === DOM ELEMENTS ===
+    const btnNggak = document.getElementById('btn-nggak');
+    const btnMau = document.getElementById('btn-mau');
+    const inputDate = document.getElementById('input-date');
+    const inputTime = document.getElementById('input-time');
+    const btnStep2Next = document.getElementById('btn-step2-next');
+    const btnStep3Next = document.getElementById('btn-step3-next');
+    const btnStep4Next = document.getElementById('btn-step4-next');
+    const btnStep5Next = document.getElementById('btn-step5-next');
+    const foodGrid = document.getElementById('food-grid');
+    const activityGrid = document.getElementById('activity-grid');
+    const customFoodContainer = document.getElementById('custom-food-container');
+    const inputCustomFood = document.getElementById('input-custom-food');
+    const customActivityContainer = document.getElementById('custom-activity-container');
+    const inputCustomActivity = document.getElementById('input-custom-activity');
+    const inputRealName = document.getElementById('input-real-name');
+    const secretNameBox = document.getElementById('secret-name-box');
+    const secretNameDisplay = document.getElementById('secret-name-display');
+    const adminTrigger = document.getElementById('admin-trigger');
+    const adminLoginScreen = document.getElementById('admin-login-screen');
+    const adminDashboardScreen = document.getElementById('admin-dashboard-screen');
+    const pinDotsContainer = document.getElementById('pin-dots');
+    const togglePermissionBtn = document.getElementById('toggle-permission');
+    const adminStatusIcon = document.getElementById('admin-status-icon');
+    const adminLogContainer = document.getElementById('admin-log-container');
+    const adminSerialDisplay = document.getElementById('admin-serial-display');
+
+    // === PERSISTENCE LOGIC (LOCALSTORAGE) ===
+    const saveStateToLocalStorage = () => {
+      localStorage.setItem('date_app_state_realtime', JSON.stringify({
+        serialCode: state.serialCode,
+        currentStep: state.currentStep,
+        date: state.date,
+        time: state.time,
+        selectedFood: state.selectedFood,
+        selectedActivity: state.selectedActivity,
+        customFood: state.customFood,
+        customActivity: state.customActivity,
+        realName: state.realName,
+        secretName: state.secretName
+      }));
+    };
+
+    const loadStateFromLocalStorage = () => {
+      const saved = localStorage.getItem('date_app_state_realtime');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          state = { ...state, ...parsed };
+          
+          if (state.date) inputDate.value = state.date;
+          if (state.time) inputTime.value = state.time;
+          if (state.realName) inputRealName.value = state.realName;
+          if (state.customFood) inputCustomFood.value = state.customFood;
+          if (state.customActivity) inputCustomActivity.value = state.customActivity;
+        } catch (e) {
+          console.error("Gagal load data lokal", e);
+        }
+      }
+    };
+
+    const resetApplicationData = () => {
+      localStorage.removeItem('date_app_state_realtime');
+      location.href = location.pathname; // Reload ke halaman awal bersih
+    };
+
+    // === REAL-TIME ENGINE (NTFY.SH) ===
+    let eventSource = null;
+
+    const connectToRealtimeSession = (code) => {
+      state.serialCode = code.toUpperCase().trim();
+      saveStateToLocalStorage();
+
+      // Selesai dengan step koneksi, go to step 0
+      if (state.currentStep === -1) {
+        goToStep(0);
+      } else {
+        goToStep(state.currentStep);
+      }
+
+      // Berlangganan (Subscribe) ke event stream dari ntfy
+      if (eventSource) eventSource.close();
+      
+      const topic = `love-date-session-${state.serialCode.toLowerCase()}`;
+      eventSource = new EventSource(`https://ntfy.sh/${topic}/sse`);
+
+      eventSource.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          handleIncomingSignal(payload.message);
+        } catch (e) {
+          // Jika pesan berupa teks murni
+          handleIncomingSignal(event.data);
+        }
+      };
+
+      // Kirim sinyal bahwa user telah bergabung/aktif
+      sendRealtimeSignal("USER:JOIN");
+    };
+
+    const sendRealtimeSignal = (message) => {
+      if (!state.serialCode) return;
+      const topic = `love-date-session-${state.serialCode.toLowerCase()}`;
+      fetch(`https://ntfy.sh/${topic}`, {
+        method: 'POST',
+        body: message
+      }).catch(err => console.error("Gagal kirim sinyal", err));
+    };
+
+    const handleIncomingSignal = (msg) => {
+      if (!msg) return;
+
+      // Sinyal dari Admin ke User
+      if (msg.startsWith("ADMIN:ALLOW_SEND:")) {
+        const allowed = msg.split(":")[2] === "true";
+        state.isSendAllowed = allowed;
+        if (state.currentStep === 6) {
+          updateWhatsAppButtonState();
+        }
+      }
+
+      // Sinyal dari User ke Admin (untuk diproses di panel admin kita)
+      if (msg.startsWith("USER:")) {
+        const parts = msg.split(":");
+        const action = parts[1];
+        
+        let logText = "";
+        const now = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+        if (action === "JOIN") {
+          logText = `🟢 Target telah terhubung! (${now})`;
+        } else if (action === "STEP") {
+          const stepNum = parts[2];
+          logText = `📱 Target membuka halaman Step ${stepNum} (${now})`;
+        } else if (action === "DATA") {
+          const dataJson = msg.substring(10); // Ambil setelah "USER:DATA:"
+          try {
+            const data = JSON.parse(dataJson);
+            logText = `✏️ Target mengisi data:\n`;
+            if (data.name) logText += `🕵️‍♂️ Nama Asli: <b>${data.name}</b>\n`;
+            if (data.date) logText += `📅 Rencana: ${data.date} jam ${data.time}\n`;
+            if (data.food) logText += `🍽️ Makan: ${data.food}\n`;
+            if (data.act) logText += `🎡 Main: ${data.act}\n`;
+          } catch(e){}
+        }
+
+        if (logText) {
+          state.targetAktivitas.unshift(logText); // Masukkan di paling atas
+          updateAdminLogUI();
+        }
+      }
+    };
+
+    // === MANAJEMEN GENERASI KODE SERIAL ===
+    const generateNewSerial = () => {
+      const randNum = Math.floor(1000 + Math.random() * 9000);
+      return `DATE-${randNum}`;
+    };
+
+    const submitManualSerial = () => {
+      const val = document.getElementById('input-serial-code').value;
+      if (val.trim()) {
+        connectToRealtimeSession(val);
+      } else {
+        alert("Masukkan kode serial terlebih dahulu!");
+      }
+    };
+
+    // Fungsi Salin Tautan yang Diperbarui Menggunakan Metode document.execCommand Cadangan (Solusi Iframe)
+    const copyInviteLink = () => {
+      const link = `${location.protocol}//${location.host}${location.pathname}?code=${state.serialCode}`;
+      
+      // Membuat elemen textarea sementara
+      const textArea = document.createElement("textarea");
+      textArea.value = link;
+      
+      // Mengamankan elemen di luar jangkauan pandang agar tidak merusak tata letak
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          const status = document.getElementById('copy-status');
+          status.classList.remove('hidden');
+          setTimeout(() => status.classList.add('hidden'), 2500);
+        } else {
+          console.error("Gagal menyalin teks.");
+        }
+      } catch (err) {
+        console.error("Kesalahan saat menyalin:", err);
+      }
+      
+      // Menghapus elemen sementara setelah proses penyalinan selesai
+      document.body.removeChild(textArea);
+    };
+
+    // === HINDARI TOMBOL "NGGAK" ===
+    const moveButton = () => {
+      const x = Math.random() * 200 - 100;
+      const y = Math.random() * 150 - 75;
+      btnNggak.style.transform = `translate(${x}px, ${y}px)`;
+    };
+    btnNggak.addEventListener('mouseenter', moveButton);
+    btnNggak.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      moveButton();
+    });
+
+    btnMau.addEventListener('click', () => {
+      goToStep(1);
+    });
+
+    // TRIGGER PANEL ADMIN
+    adminTrigger.addEventListener('click', () => {
+      if (state.adminAuthenticated) {
+        openAdminDashboard();
+      } else {
+        openAdminLogin();
+      }
+    });
+
+    // === JADWAL VALIDATION (STEP 2) ===
+    const checkStep2Validation = () => {
+      state.date = inputDate.value;
+      state.time = inputTime.value;
+      saveStateToLocalStorage();
+      if (state.date && state.time) {
+        btnStep2Next.removeAttribute('disabled');
+        btnStep2Next.className = "w-full py-4 rounded-full font-bold text-lg transition-all mt-4 bg-pink-500 hover:bg-pink-600 text-white shadow-lg animate-fade-in-up";
+      } else {
+        btnStep2Next.setAttribute('disabled', 'true');
+        btnStep2Next.className = "w-full py-4 rounded-full font-bold text-lg transition-all mt-4 bg-gray-200 text-gray-400 cursor-not-allowed";
+      }
+    };
+    inputDate.addEventListener('change', checkStep2Validation);
+    inputTime.addEventListener('change', checkStep2Validation);
+
+    // === MAKANAN GRID GENERATION (STEP 3) ===
+    const renderFoodGrid = () => {
+      foodGrid.innerHTML = '';
+      foods.forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = `text-4xl flex flex-col items-center justify-center rounded-2xl border-2 transition-all aspect-square bg-white ${state.selectedFood?.id === item.id ? 'border-pink-500 bg-pink-100' : 'border-gray-200'}`;
+        btn.innerHTML = `<span>${item.icon}</span>`;
+        btn.onclick = () => selectFood(item);
+        foodGrid.appendChild(btn);
+      });
+    };
+
+    const selectFood = (food) => {
+      state.selectedFood = food;
+      if (food.id === 'custom') {
+        customFoodContainer.classList.remove('hidden');
+        inputCustomFood.focus();
+      } else {
+        customFoodContainer.classList.add('hidden');
+      }
+      renderFoodGrid();
+      validateStep3();
+      saveStateToLocalStorage();
+    };
+
+    inputCustomFood.addEventListener('input', () => {
+      state.customFood = inputCustomFood.value;
+      validateStep3();
+      saveStateToLocalStorage();
+    });
+
+    const validateStep3 = () => {
+      const isValid = state.selectedFood && (state.selectedFood.id !== 'custom' || state.customFood.trim() !== '');
+      if (isValid) {
+        btnStep3Next.removeAttribute('disabled');
+        btnStep3Next.className = "w-full py-4 rounded-full font-bold text-lg transition-all mt-auto bg-pink-500 hover:bg-pink-600 text-white shadow-lg";
+      } else {
+        btnStep3Next.setAttribute('disabled', 'true');
+        btnStep3Next.className = "w-full py-4 rounded-full font-bold text-lg transition-all mt-auto bg-gray-200 text-gray-400 cursor-not-allowed";
+      }
+    };
+
+    // === AKTIVITAS GRID GENERATION (STEP 4) ===
+    const renderActivityGrid = () => {
+      activityGrid.innerHTML = '';
+      activities.forEach(act => {
+        const btn = document.createElement('button');
+        btn.className = `text-3xl aspect-square flex items-center justify-center rounded-2xl border-2 transition-all bg-white ${state.selectedActivity?.id === act.id ? 'border-pink-500 bg-pink-100' : 'border-gray-200'}`;
+        btn.innerHTML = `<span>${act.icon}</span>`;
+        btn.onclick = () => selectActivity(act);
+        activityGrid.appendChild(act);
+      });
+    };
+
+    const selectActivity = (act) => {
+      state.selectedActivity = act;
+      if (act.id === 'custom') {
+        customActivityContainer.classList.remove('hidden');
+        inputCustomActivity.focus();
+      } else {
+        customActivityContainer.classList.add('hidden');
+      }
+      renderActivityGrid();
+      validateStep4();
+      saveStateToLocalStorage();
+    };
+
+    inputCustomActivity.addEventListener('input', () => {
+      state.customActivity = inputCustomActivity.value;
+      validateStep4();
+      saveStateToLocalStorage();
+    });
+
+    const validateStep4 = () => {
+      const isValid = state.selectedActivity && (state.selectedActivity.id !== 'custom' || state.customActivity.trim() !== '');
+      if (isValid) {
+        btnStep4Next.removeAttribute('disabled');
+        btnStep4Next.className = "w-full py-4 rounded-full font-bold text-lg transition-all mt-auto bg-pink-500 hover:bg-pink-600 text-white shadow-lg";
+      } else {
+        btnStep4Next.setAttribute('disabled', 'true');
+        btnStep4Next.className = "w-full py-4 rounded-full font-bold text-lg transition-all mt-auto bg-gray-200 text-gray-400 cursor-not-allowed";
+      }
+    };
+
+    // === GENERATE SECRET NAME & REAL NAME INPUT (STEP 5) ===
+    inputRealName.addEventListener('input', () => {
+      const real = inputRealName.value;
+      state.realName = real;
+      
+      if (!real.trim()) {
+        state.secretName = '';
+        secretNameBox.classList.add('hidden');
+        btnStep5Next.setAttribute('disabled', 'true');
+        btnStep5Next.className = "w-full py-4 rounded-full font-bold text-lg transition-all mt-auto bg-gray-200 text-gray-400 cursor-not-allowed";
+        saveStateToLocalStorage();
+        return;
+      }
+
+      // Algoritma Generator Sandi Rahasia
+      const words = real.trim().split(/\s+/);
+      const initials = words.map(w => w[0].toUpperCase()).join('');
+      const now = new Date();
+      const timeStr = `${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`;
+      
+      let finalSecret = '';
+      const initArr = initials.split('');
+      const timeArr = timeStr.split('');
+      const maxLen = Math.max(initArr.length, timeArr.length);
+      
+      for (let i = 0; i < maxLen; i++) {
+        if (initArr[i]) finalSecret += initArr[i];
+        if (timeArr[i]) finalSecret += timeArr[i];
+      }
+      
+      state.secretName = finalSecret;
+      secretNameDisplay.textContent = finalSecret;
+      secretNameBox.classList.remove('hidden');
+
+      btnStep5Next.removeAttribute('disabled');
+      btnStep5Next.className = "w-full py-4 rounded-full font-bold text-lg transition-all mt-auto bg-pink-500 hover:bg-pink-600 text-white shadow-lg";
+      saveStateToLocalStorage();
+    });
+
+    const handleFinishStep5 = () => {
+      // Kirim kompilasi data lengkap ke admin secara real-time
+      const dataPayload = {
+        name: state.realName,
+        date: state.date,
+        time: state.time,
+        food: state.selectedFood?.id === 'custom' ? state.customFood : state.selectedFood?.name,
+        act: state.selectedActivity?.id === 'custom' ? state.customActivity : state.selectedActivity?.name
+      };
+      sendRealtimeSignal(`USER:DATA:${JSON.stringify(dataPayload)}`);
+      goToStep(6);
+    };
+
+    // === STEP NAVIGATION ===
+    const goToStep = (step) => {
+      state.currentStep = step;
+      saveStateToLocalStorage();
+      
+      // Sembunyikan semua step container
+      document.querySelectorAll('.step-container').forEach(el => el.classList.add('hidden'));
+      
+      // Tampilkan step yang dituju
+      let activeStepEl = null;
+      if (step === -1) {
+        activeStepEl = document.getElementById('step-connection');
+      } else {
+        activeStepEl = document.getElementById(`step-${step}`);
+      }
+      
+      if (activeStepEl) {
+        activeStepEl.classList.remove('hidden');
+      }
+
+      // Kirim pergerakan step target ke admin
+      if (step >= 0) {
+        sendRealtimeSignal(`USER:STEP:${step}`);
+      }
+
+      // Init khusus per step
+      if (step === 3) {
+        renderFoodGrid();
+        validateStep3();
+      }
+      if (step === 4) {
+        renderActivityGrid();
+        validateStep4();
+      }
+      if (step === 5) {
+        inputRealName.dispatchEvent(new Event('input'));
+      }
+      if (step === 6) renderFinalSummary();
+    };
+
+    // === SUMMARY JADWAL & FINAL (STEP 6) ===
+    const formatDateTime = () => {
+      if (!state.date || !state.time) return "Segera";
+      try {
+        const d = new Date(`${state.date}T${state.time}`);
+        return d.toLocaleString('id-ID', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: false });
+      } catch (e) {
+        return `${state.date} ${state.time}`;
+      }
+    };
+
+    const renderFinalSummary = () => {
+      document.getElementById('summary-secret-name').textContent = state.secretName;
+      document.getElementById('summary-datetime').textContent = formatDateTime();
+      
+      const finalFoodName = state.selectedFood?.id === 'custom' ? state.customFood : (state.selectedFood?.name || 'Terserah');
+      const finalFoodIcon = state.selectedFood?.id === 'custom' ? '✨' : (state.selectedFood?.icon || '');
+      document.getElementById('summary-food').textContent = `${finalFoodName} ${finalFoodIcon}`;
+      
+      const finalActivityName = state.selectedActivity?.id === 'custom' ? state.customActivity : (state.selectedActivity?.name || 'Terserah');
+      const finalActivityIcon = state.selectedActivity?.id === 'custom' ? '✨' : (state.selectedActivity?.icon || '');
+      document.getElementById('summary-activity').textContent = `${finalActivityName} ${finalActivityIcon}`;
+
+      updateWhatsAppButtonState();
+    };
+
+    const updateWhatsAppButtonState = () => {
+      const btnWA = document.getElementById('btn-whatsapp');
+      const statusText = document.getElementById('send-status-text');
+      
+      if (state.isSendAllowed) {
+        statusText.textContent = "Izin didapatkan! Kirim ke WhatsApp yuk 👇";
+        statusText.className = "text-green-600 mb-4 text-center animate-pulse text-sm font-bold";
+        
+        btnWA.removeAttribute('disabled');
+        btnWA.className = "w-full py-4 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2 bg-[#25D366] text-white shadow-lg hover:bg-emerald-600";
+        btnWA.querySelector('span').textContent = "Kirim ke WhatsApp";
+      } else {
+        statusText.textContent = "Menunggu konfirmasi admin... ⏳";
+        statusText.className = "text-amber-600 mb-4 text-center animate-pulse text-sm font-medium";
+        
+        btnWA.setAttribute('disabled', 'true');
+        btnWA.className = "w-full py-4 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2 bg-gray-200 text-gray-400 cursor-not-allowed";
+        btnWA.querySelector('span').textContent = "Konfirmasi dulu di Admin";
+      }
+    };
+
+    // === WHATSAPP SENDER ===
+    const sendWhatsApp = () => {
+      if (!state.isSendAllowed) return;
+      const phoneNumber = "6289677108504"; // Nomor admin WhatsApp Anda
+      const formattedDate = formatDateTime();
+      const finalFood = state.selectedFood?.id === 'custom' ? state.customFood : (state.selectedFood?.name || 'Terserah');
+      const finalActivity = state.selectedActivity?.id === 'custom' ? state.customActivity : (state.selectedActivity?.name || 'Terserah');
+      
+      const message = `Hai! Ada ajakan nge-date rahasia nih! 🥰\n\n🕵️‍♂️ Dari: *${state.secretName}*\n📅 Kapan: ${formattedDate}\n🍽️ Makan apa: ${finalFood} ${state.selectedFood?.id === 'custom' ? '✨' : (state.selectedFood?.icon || '')}\n🎉 Ngapain: ${finalActivity} ${state.selectedActivity?.id === 'custom' ? '✨' : (state.selectedActivity?.icon || '')}\n\nDitunggu ya jemputannya! 🚗💨`;
+      
+      window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    };
+
+    // === ADMIN SECTION ===
+    const openAdminLogin = () => {
+      state.enteredPin = '';
+      updatePinDots();
+      adminLoginScreen.classList.remove('hidden');
+    };
+
+    const closeAdmin = () => {
+      adminLoginScreen.classList.add('hidden');
+      adminDashboardScreen.classList.add('hidden');
+    };
+
+    const pressPin = (num) => {
+      if (state.enteredPin.length < 6) {
+        state.enteredPin += num;
+        updatePinDots();
+        
+        if (state.enteredPin.length === 6) {
+          verifyAdminPin();
+        }
+      }
+    };
+
+    const deletePin = () => {
+      state.enteredPin = state.enteredPin.slice(0, -1);
+      updatePinDots();
+    };
+
+    const updatePinDots = () => {
+      const dots = pinDotsContainer.children;
+      for (let i = 0; i < 6; i++) {
+        if (state.enteredPin.length > i) {
+          dots[i].className = "w-[12px] h-[12px] rounded-full border border-white bg-white transition-all";
+        } else {
+          dots[i].className = "w-[12px] h-[12px] rounded-full border border-white bg-transparent transition-all";
+        }
+      }
+    };
+
+    const verifyAdminPin = () => {
+      const now = new Date();
+      const nowStr = now.getDate().toString().padStart(2, '0') + 
+                     now.getHours().toString().padStart(2, '0') + 
+                     now.getMinutes().toString().padStart(2, '0');
+      
+      const oneMinAgo = new Date(now.getTime() - 60000);
+      const agoStr = oneMinAgo.getDate().toString().padStart(2, '0') + 
+                     oneMinAgo.getHours().toString().padStart(2, '0') + 
+                     oneMinAgo.getMinutes().toString().padStart(2, '0');
+                     
+      if (state.enteredPin === nowStr || state.enteredPin === agoStr) {
+        state.adminAuthenticated = true;
+        adminLoginScreen.classList.add('hidden');
+        
+        // Buat serial baru jika admin baru pertama kali masuk dan belum memiliki serial
+        if (!state.serialCode) {
+          state.serialCode = generateNewSerial();
+        }
+        
+        openAdminDashboard();
+      } else {
+        pinDotsContainer.classList.add('animate-shake');
+        setTimeout(() => {
+          pinDotsContainer.classList.remove('animate-shake');
+          state.enteredPin = '';
+          updatePinDots();
+        }, 400);
+      }
+    };
+
+    const openAdminDashboard = () => {
+      adminDashboardScreen.classList.remove('hidden');
+      adminSerialDisplay.textContent = state.serialCode;
+      
+      // Jika di halaman admin kita belum terkoneksi ke channel ntfy, buat koneksinya
+      if (!eventSource) {
+        connectToRealtimeSession(state.serialCode);
+      }
+      
+      updateAdminDashboardUI();
+    };
+
+    const updateAdminDashboardUI = () => {
+      if (state.isSendAllowed) {
+        togglePermissionBtn.className = "w-16 h-8 rounded-full p-1 transition-all flex items-center shadow-inner bg-[#34C759] justify-end";
+        adminStatusIcon.textContent = "🔓";
+      } else {
+        togglePermissionBtn.className = "w-16 h-8 rounded-full p-1 transition-all flex items-center shadow-inner bg-gray-300 justify-start";
+        adminStatusIcon.textContent = "🔒";
+      }
+    };
+
+    const togglePermission = () => {
+      state.isSendAllowed = !state.isSendAllowed;
+      updateAdminDashboardUI();
+      saveStateToLocalStorage();
+      
+      // Kirim sinyal perubahan ke HP si dia
+      sendRealtimeSignal(`ADMIN:ALLOW_SEND:${state.isSendAllowed}`);
+    };
+
+    const updateAdminLogUI = () => {
+      if (state.targetAktivitas.length > 0) {
+        adminLogContainer.innerHTML = state.targetAktivitas.map(log => `
+          <div class="bg-gray-50 p-2 rounded-xl border border-gray-100 text-[11px] text-gray-700 font-medium">
+            ${log.replace(/\n/g, '<br>')}
+          </div>
+        `).join('');
+      } else {
+        adminLogContainer.innerHTML = `
+          <p class="text-gray-400 text-xs italic">Belum ada aktivitas terdeteksi...</p>
+        `;
+      }
+    };
+
+    // === AUTO START ===
+    window.addEventListener('load', () => {
+      loadStateFromLocalStorage();
+      
+      // Membaca query string url: ?code=DATE-XXXX
+      const urlParams = new URLSearchParams(window.location.search);
+      const codeParam = urlParams.get('code');
+
+      if (codeParam) {
+        // Jika dibuka dari link ajakan, langsung hubungkan
+        connectToRealtimeSession(codeParam);
+      } else if (state.serialCode) {
+        // Jika sudah tersimpan di browser secara lokal
+        connectToRealtimeSession(state.serialCode);
+      } else {
+        // Jika baru pertama kali buka dan bukan admin, tampilkan screen input serial
+        goToStep(-1);
+      }
+    });
+  </script>
+</body>
+</html>
